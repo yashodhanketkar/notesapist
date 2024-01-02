@@ -1,0 +1,225 @@
+openapi: 3.1.0
+info:
+  title: Notes API
+  description: |-
+    This is simple REST API for notes.
+  version: 1.0.0
+servers:
+  - url: http://localhost:5555/api/
+tags:
+  - name: User
+    description: User operations
+  - name: Note
+    description: Notes operations
+paths:
+  /users/register:
+    post:
+      tags:
+        - User
+      summary: Create a new user
+      description: Creates new user account
+      operationId: registerUser
+      requestBody:
+        description: Registers user
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InputUser'
+        required: true
+      responses:
+        '201':
+          description: Successful registration
+        '500':
+          description: Successful registration
+  /users/login:
+    post:
+      tags:
+        - User
+      summary: login the user user
+      description: Login the user account
+      operationId: loginUser
+      requestBody:
+        description: Message and JWT token
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InputUser'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '401':
+          description: Invalid credentials
+        '500':
+          description: Unsuccessful operation
+  /notes/:
+    get:
+      tags:
+        - Note
+      summary: Get all notes
+      description: Returns all notes
+      operationId: listNotes
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Notes'
+        '500': 
+          description: Unsuccessful operation
+    post:
+      tags:
+        - Note
+      summary: Create a new note
+      description: Creates new note
+      operationId: createNote
+      requestBody:
+        description: Create new note
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InputNote'
+        required: true
+      responses:
+        '201':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notes'
+        '500':
+          description: Unsuccessful operation
+      security:
+        - bearerAuth: []
+  /notes/{id}:
+    get:
+      tags:
+        - Note
+      summary: Get a note
+      description: Returns all notes
+      operationId: getNote
+      parameters:
+        - name: id
+          in: path
+          description: ID of note to return
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notes'
+        '500': 
+          description: Unsuccessful operation
+    patch:
+      tags:
+        - Note
+      summary: Update a note
+      description: Update the note with the specified ID
+      operationId: updateNote
+      parameters:
+        - name: id
+          in: path
+          description: ID of note to update
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notes'
+        '500': 
+          description: Unsuccessful operation
+      security:
+        - bearerAuth: []
+    delete:
+      tags:
+        - Note
+      summary: Deletes a note
+      description: Deletes the note with the specified ID
+      operationId: deleteNote
+      parameters:
+        - name: id
+          in: path
+          description: ID of note to delete
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notes'
+        '500': 
+          description: Unsuccessful operation
+      security:
+        - bearerAuth: []
+components:
+  schemas:
+    Notes:
+      type: object
+      properties:
+        _id:
+          type: string
+        title:
+          type: string
+        content:
+          type: string
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+    Users:
+      type: object
+      properties:
+        _id:
+          type: string
+        username:
+          type: string
+        password:
+          type: string
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+    LoginResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        token:
+          type: string
+    InputNote:
+      type: object
+      properties:
+        title:
+          type: string
+        content:
+          type: string
+    InputUser:
+        type: object
+        properties:
+          username:
+            type: string
+          password:
+            type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
