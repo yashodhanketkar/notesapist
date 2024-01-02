@@ -26,6 +26,8 @@ TOKEN=$jwt_secret
 ### start the app
 - Run `yarn start` or `npm run start` or `pnpm start`
 
+Visit `http://localhost:5555/docs` to see the api documentation
+
 ## Licence
 
 MIT © 2023
